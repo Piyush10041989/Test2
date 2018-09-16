@@ -17,5 +17,47 @@
   </dependencies>
   <build>
     <finalName>Test2</finalName>
+    <plugins>
+    <plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.15.7</version>
+						<configuration>
+							<images>
+								<image>
+								<alias>${project.artifactId}</alias>
+                                <name>${docker.repository.name}</name>
+									<build>
+										<tags>
+											<tag>${project.version}</tag>
+											<tag>latest</tag>
+										</tags>
+										<assembly>
+											<descriptor>docker-assembly.xml</descriptor>
+											<basedir>/usr/local/tomcat/webapps</basedir>
+										</assembly>
+										<dockerFileDir>file/</dockerFileDir>
+								    </build>
+								</image>
+							</images>
+						</configuration>
+						<executions>
+							<execution>
+								<id>start</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>push-to-docker-registry</id>
+								<phase>deploy</phase>
+								<goals>
+									<goal>push</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+    </plugins>
   </build>
 </project>
